@@ -16,9 +16,9 @@
         }
 
         :root {
-            --background: #ffffff;
+            --background: #f8f9fa;
             --foreground: #333333;
-            --muted: #f4f4f4;
+            --muted: #ffffff;
             --muted-foreground: #666666;
             --border: #e0e0e0;
             --accent: #3a86ff;
@@ -30,27 +30,48 @@
             background-color: var(--background);
             color: var(--foreground);
             min-height: 100vh;
-            display: flex;
+            padding: 1rem;
+        }
+
+        .app-container {
+            background: var(--muted);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            min-height: calc(100vh - 2rem);
+            border: 1px solid var(--border);
+            padding: 1rem;
         }
 
         /* Layout */
         .layout {
             display: flex;
-            width: 100%;
+            gap: 1rem;
+            height: 100%;
         }
 
         /* Sidebar */
         .sidebar {
+            background: var(--muted);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
             width: 250px;
-            border-right: 1px solid var(--border);
-            padding: 2rem;
-            background-color: var(--muted);
+            padding: 1.5rem;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 2rem;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.25rem;
         }
 
         /* Main content */
         .main {
             flex: 1;
-            padding: 2rem;
+            background: var(--muted);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
         }
 
         /* Components */
@@ -77,7 +98,7 @@
         .card {
             background: var(--background);
             border: 1px solid var(--border);
-            border-radius: 0.5rem;
+            border-radius: 1rem;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             transition: all 0.3s ease;
@@ -91,19 +112,26 @@
 
         /* Navigation */
         .nav-link {
-            display: block;
+            display: flex;
             padding: 0.75rem 1rem;
             color: var(--foreground);
             text-decoration: none;
-            border-radius: 0.375rem;
-            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
             transition: all 0.2s;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
         }
 
-        .nav-link:hover,
+        .nav-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
         .nav-link.active {
             background: var(--accent);
             color: white;
+            border-color: var(--accent);
         }
 
         /* Header */
@@ -184,64 +212,73 @@
 </head>
 
 <body>
-    <div class="layout">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <h2 style="margin-bottom: 2rem; color: var(--accent); font-weight: 700;">Dashboard</h2>
-            <nav>
-                <a href="teacherdashboard.html" class="nav-link active">Dashboard</a>
-                <a href="teacherpanel.html" class="nav-link">Panel</a>
-            </nav>
-        </aside>
+    <div class="app-container">
+        <div class="layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h2>Dashboard</h2>
+                <nav>
+                    <a href="teacherdashboard.html" class="nav-link active">Dashboard</a>
+                    <a href="teacherpanel.html" class="nav-link">Panel</a>
+                </nav>
+            </aside>
 
-        <!-- Main Content -->
-        <main class="main">
-            <header class="header">
-                <h1 style="font-size: 2rem; font-weight: 700;">Dashboard</h1>
-                <button class="button" onclick="logout()">Logout</button>
-            </header>
+            <!-- Main Content -->
+            <main class="main">
+                <header class="header">
+                    <h1 style="font-size: 2rem; font-weight: 700;">Dashboard</h1>
+                    <button class="button" onclick="logout()">Logout</button>
+                </header>
 
-            <!-- Dropdown buttons -->
-            <div style="margin-bottom: 2rem;">
-                <div class="dropdown">
-                    <button class="button" onclick="toggleDropdown(this)">Semester</button>
-                    <div class="dropdown-content">
-                        <a href="#">Semester 1</a>
-                        <a href="#">Semester 2</a>
-                        <a href="#">Semester 3</a>
+                <!-- Dropdown buttons -->
+                <div style="margin-bottom: 2rem;">
+                    <div class="dropdown">
+                        <button class="button" onclick="toggleDropdown(this)">Semester</button>
+                        <div class="dropdown-content">
+                            <a href="#">Semester 1</a>
+                            <a href="#">Semester 2</a>
+                            <a href="#">Semester 3</a>
+                            <a href="#">Semester 4</a>
+                            <a href="#">Semester 5</a>
+                            <a href="#">Semester 6</a>
+                            <a href="#">Semester 7</a>
+                            <a href="#">Semester 8</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="button" onclick="toggleDropdown(this)">Subject</button>
+                        <div class="dropdown-content">
+                            <a href="#">SPCC</a>
+                            <a href="#">AI</a>
+                            <a href="#">CSS</a>
+                            <a href="#">QA</a>
+                            <a href="#">MC</a>
+                            <a href="#">CC</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="button" onclick="toggleDropdown(this)">Class</button>
+                        <div class="dropdown-content">
+                            <a href="#">TE CMPN A</a>
+                            <a href="#">TE CMPN B</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="button" onclick="toggleDropdown(this)">Tasks</button>
+                        <div class="dropdown-content">
+                            <a href="#">ISE 1</a>
+                            <a href="#">ISE 2</a>
+                            <a href="#">MSE</a>
+                        </div>
                     </div>
                 </div>
-                <div class="dropdown">
-                    <button class="button" onclick="toggleDropdown(this)">Subject</button>
-                    <div class="dropdown-content">
-                        <a href="#">Math</a>
-                        <a href="#">Science</a>
-                        <a href="#">History</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="button" onclick="toggleDropdown(this)">Class</button>
-                    <div class="dropdown-content">
-                        <a href="#">Class A</a>
-                        <a href="#">Class B</a>
-                        <a href="#">Class C</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="button" onclick="toggleDropdown(this)">Tasks</button>
-                    <div class="dropdown-content">
-                        <a href="#">Homework</a>
-                        <a href="#">Projects</a>
-                        <a href="#">Exams</a>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Circle placeholder -->
-            <div class="card" style="max-width: 400px; aspect-ratio: 1; margin: 2rem auto;">
-                <div class="circle-placeholder"></div>
-            </div>
-        </main>
+                <!-- Circle placeholder -->
+                <div class="card" style="max-width: 400px; aspect-ratio: 1; margin: 2rem auto;">
+                    <div class="circle-placeholder"></div>
+                </div>
+            </main>
+        </div>
     </div>
 
     <script>
