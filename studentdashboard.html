@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --background: #f8f9fa;
+            --foreground: #333333;
+            --muted: #ffffff;
+            --muted-foreground: #666666;
+            --border: #e0e0e0;
+            --accent: #3a86ff;
+            --accent-hover: #2a76ef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .app-container {
+            background: var(--muted);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            min-height: calc(100vh - 2rem);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            display: flex;
+        }
+
+        .layout {
+            display: flex;
+            gap: 1rem;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--muted);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            bottom: 2rem;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            color: var(--accent);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .nav-link {
+            display: flex;
+            padding: 0.75rem 1rem;
+            color: var(--foreground);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+            border: 1px solid var(--border);
+        }
+
+        .nav-link.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .nav-link:hover:not(.active) {
+            background: rgba(58, 134, 255, 0.1);
+            border-color: var(--accent);
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex: 1;
+            background: var(--muted);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-left: 270px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            color: var(--foreground);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: var(--accent);
+            color: white;
+            padding: 0.625rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Card sections */
+        .section {
+            background: var(--muted);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            color: var(--foreground);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Info grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .info-item {
+            background: var(--background);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .info-item h4 {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-item p {
+            color: var(--foreground);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Progress grid */
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .progress-card {
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .progress-card h4 {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-value {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Attendance grid */
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .attendance-card {
+            background: var(--background);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .attendance-card h4 {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .attendance-value {
+            color: var(--accent);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h2>Stud Dashboard</h2>
+                <a href="studentdashboard.html" class="nav-link active">Dashboard</a>
+                <a href="studentpanel.html" class="nav-link">Panel</a>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <h1>Student Dashboard</h1>
+                    <button class="logout-btn">Logout</button>
+                </div>
+
+                <!-- Student Information Section -->
+                <div class="section">
+                    <h3 class="section-title">Student Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h4>Student Name</h4>
+                            <p>John Doe</p>
+                        </div>
+                        <div class="info-item">
+                            <h4>Roll Number</h4>
+                            <p>26</p>
+                        </div>
+                        <div class="info-item">
+                            <h4>Class</h4>
+                            <p>TE CMPN-B</p>
+                        </div>
+                        <div class="info-item">
+                            <h4>Academic Year</h4>
+                            <p>2024-2025</p>
+                        </div>
+                        <div class="info-item">
+                            <h4>Contact Number</h4>
+                            <p>+1 234 567 8900</p>
+                        </div>
+                        <div class="info-item">
+                            <h4>Email</h4>
+                            <p>john.doe@example.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Progress Section -->
+                <div class="section">
+                    <h3 class="section-title">Academic Progress</h3>
+                    <div class="progress-grid">
+                        <div class="progress-card">
+                            <h4>Overall Grade</h4>
+                            <div class="progress-value">A+</div>
+                        </div>
+                        <div class="progress-card">
+                            <h4>Completed Assignments</h4>
+                            <div class="progress-value">45/50</div>
+                        </div>
+                        <div class="progress-card">
+                            <h4>Average Score</h4>
+                            <div class="progress-value">92%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Section -->
+                <div class="section">
+                    <h3 class="section-title">Attendance Overview</h3>
+                    <div class="attendance-grid">
+                        <div class="attendance-card">
+                            <h4>Total Classes</h4>
+                            <div class="attendance-value">180</div>
+                        </div>
+                        <div class="attendance-card">
+                            <h4>Present</h4>
+                            <div class="attendance-value">172</div>
+                        </div>
+                        <div class="attendance-card">
+                            <h4>Absent</h4>
+                            <div class="attendance-value">8</div>
+                        </div>
+                        <div class="attendance-card">
+                            <h4>Attendance %</h4>
+                            <div class="attendance-value">95.5%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
