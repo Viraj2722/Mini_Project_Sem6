@@ -449,14 +449,14 @@
                             <button id="semesterBtn" class="button button-primary"
                                 onclick="toggleDropdown(this)">Semester</button>
                             <div class="dropdown-content">
-                                <a href="#" onclick="selectSemester(1, this)">Semester 1</a>
-                                <a href="#" onclick="selectSemester(2, this)">Semester 2</a>
-                                <a href="#" onclick="selectSemester(3, this)">Semester 3</a>
-                                <a href="#" onclick="selectSemester(4, this)">Semester 4</a>
-                                <a href="#" onclick="selectSemester(5, this)">Semester 5</a>
-                                <a href="#" onclick="selectSemester(6, this)">Semester 6</a>
-                                <a href="#" onclick="selectSemester(7, this)">Semester 7</a>
-                                <a href="#" onclick="selectSemester(8, this)">Semester 8</a>
+                                <a href="#" onclick="selectSemester('FE', 1, this)">FE Semester 1</a>
+                                <a href="#" onclick="selectSemester('FE', 2, this)">FE Semester 2</a>
+                                <a href="#" onclick="selectSemester('SE', 3, this)">SE Semester 3</a>
+                                <a href="#" onclick="selectSemester('SE', 4, this)">SE Semester 4</a>
+                                <a href="#" onclick="selectSemester('TE', 5, this)">TE Semester 5</a>
+                                <a href="#" onclick="selectSemester('TE', 6, this)">TE Semester 6</a>
+                                <a href="#" onclick="selectSemester('BE', 7, this)">BE Semester 7</a>
+                                <a href="#" onclick="selectSemester('BE', 8, this)">BE Semester 8</a>
                             </div>
                         </div>
                         <div class="dropdown">
@@ -467,10 +467,10 @@
                             </div>
                         </div>
                         <div class="dropdown">
-                            <button class="button button-primary" onclick="toggleDropdown(this)">Class</button>
-                            <div class="dropdown-content">
-                                <a href="#">TE CMPN A</a>
-                                <a href="#">TE CMPN B</a>
+                            <button id="classBtn" class="button button-primary"
+                                onclick="toggleDropdown(this)">Class</button>
+                            <div id="classDropdown" class="dropdown-content">
+                                <!-- Classes will be populated dynamically -->
                             </div>
                         </div>
                     </div>
@@ -700,18 +700,39 @@
             8: ['Deep Learning', 'Natural Language Processing', 'Information Security', 'Project Management', 'Ethics in IT']
         };
 
+        // Define classes for each year
+        const yearClasses = {
+            'FE': ['FE A', 'FE B'],
+            'SE': ['SE CMPN A', 'SE CMPN B'],
+            'TE': ['TE CMPN A', 'TE CMPN B'],
+            'BE': ['BE CMPN A', 'BE CMPN B']
+        };
+
+        let selectedYear = null;
         let selectedSemester = null;
         let selectedSubject = null;
+        let selectedClass = null;
 
-        function selectSemester(semester, element) {
+        function selectSemester(year, semester, element) {
             event.preventDefault();
+            selectedYear = year;
             selectedSemester = semester;
 
             // Update semester button text
             const semesterBtn = document.getElementById('semesterBtn');
-            semesterBtn.textContent = `Semester ${semester}`;
+            semesterBtn.textContent = `${year} Semester ${semester}`;
 
             // Update subject dropdown
+            updateSubjectDropdown(semester);
+
+            // Update class dropdown
+            updateClassDropdown(year);
+
+            // Close the dropdown
+            element.closest('.dropdown').classList.remove('active');
+        }
+
+        function updateSubjectDropdown(semester) {
             const subjectDropdown = document.getElementById('subjectDropdown');
             subjectDropdown.innerHTML = ''; // Clear existing subjects
 
@@ -728,9 +749,25 @@
             const subjectBtn = document.getElementById('subjectBtn');
             subjectBtn.textContent = 'Subject';
             selectedSubject = null;
+        }
 
-            // Close the dropdown
-            element.closest('.dropdown').classList.remove('active');
+        function updateClassDropdown(year) {
+            const classDropdown = document.getElementById('classDropdown');
+            classDropdown.innerHTML = ''; // Clear existing classes
+
+            // Add new classes for selected year
+            yearClasses[year].forEach(className => {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = className;
+                link.onclick = (e) => selectClass(e, className);
+                classDropdown.appendChild(link);
+            });
+
+            // Reset class button
+            const classBtn = document.getElementById('classBtn');
+            classBtn.textContent = 'Class';
+            selectedClass = null;
         }
 
         function selectSubject(event, subject) {
@@ -745,15 +782,26 @@
             event.target.closest('.dropdown').classList.remove('active');
         }
 
-        // Initialize with Semester 6 selected
+        function selectClass(event, className) {
+            event.preventDefault();
+            selectedClass = className;
+
+            // Update class button text
+            const classBtn = document.getElementById('classBtn');
+            classBtn.textContent = className;
+
+            // Close the dropdown
+            event.target.closest('.dropdown').classList.remove('active');
+        }
+
+        // // Initialize with FE Semester 1 selected
         // document.addEventListener('DOMContentLoaded', () => {
-        //     // Previous initialization code remains
         //     const taskList = document.getElementById('taskList');
         //     const today = new Date().toISOString().split('T')[0];
         //     taskList.insertAdjacentHTML('beforeend', taskTemplate('Sample Task', today));
 
-        //     // Select Semester 6 by default
-        //     // selectSemester(6, document.querySelector('.dropdown-content a:nth-child(6)'));
+        //     // Select FE Semester 1 by default
+        //     selectSemester('FE', 1, document.querySelector('.dropdown-content a:first-child'));
         // });
     </script>
 </body>
