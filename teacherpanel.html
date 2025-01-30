@@ -6,563 +6,367 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced Teacher Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
         :root {
-            --background: #f8f9fa;
-            --foreground: #333333;
-            --muted: #ffffff;
-            --muted-foreground: #666666;
-            --border: #e0e0e0;
-            --accent: #3a86ff;
-            --accent-hover: #2a76ef;
-            --danger: #dc2626;
-            --success: #16a34a;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --primary-blue: #4287f5;
+            --border-color: #e0e6ed;
+            --background-white: #ffffff;
         }
 
         body {
-            background-color: var(--background);
-            color: var(--foreground);
+            background-color: #caf0f8;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
             min-height: 100vh;
-            padding: 1rem;
         }
 
         .app-container {
-            background: var(--muted);
-            border-radius: 1rem;
-            box-shadow: var(--shadow);
-            min-height: calc(100vh - 2rem);
-            border: 1px solid var(--border);
+            min-height: 100vh;
+            display: flex;
             padding: 1rem;
-            display: flex;
-        }
-
-        .layout {
-            display: flex;
             gap: 1rem;
-            height: 100%;
-            width: 100%;
         }
 
         .sidebar {
             width: 250px;
-            background-color: var(--muted);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            position: fixed;
-            top: 2rem;
-            left: 2rem;
-            bottom: 2rem;
-            overflow-y: auto;
+            /* Slightly reduced width */
+            background-color: var(--background-white);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            height: 100vh;
+            position: sticky;
+            top: 1rem;
+        }
+
+        .sidebar-title {
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+            /* Reduced from 1.5rem */
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-link {
+            color: #64748b;
+            padding: 0.6rem 0.8rem;
+            /* Slightly reduced padding */
+            border-radius: 0.5rem;
+            margin-bottom: 0.4rem;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            /* Reduced font size */
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
         }
 
         .main-content {
             flex: 1;
-            background: var(--muted);
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            margin-left: 270px;
+            background: var(--background-white);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.25rem;
         }
 
-        .button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            padding: 0.625rem 1rem;
-            transition: all 0.2s;
-            cursor: pointer;
-            font-size: 0.875rem;
-            border: 1px solid transparent;
-            background: var(--accent);
-            color: white;
-            gap: 0.5rem;
-            min-width: 80px;
-            height: 40px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-
-        .button:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-        }
-
-        .button:active {
-            transform: translateY(0);
-        }
-
-        .button-outline {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--foreground);
-        }
-
-        .button-outline:hover {
-            background: var(--muted);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .button-primary {
-            background: var(--accent);
-            color: white;
+        .btn-blue {
+            background-color: var(--primary-blue);
             border: none;
-        }
-
-        .button-primary:hover {
-            background: var(--accent-hover);
-        }
-
-        .task-actions {
-            display: flex;
-            gap: 0.75rem;
-            margin-left: auto;
-        }
-
-        .nav-link {
-            display: flex;
-            padding: 0.75rem 1rem;
-            color: var(--foreground);
-            text-decoration: none;
-            border-radius: 0.5rem;
-            transition: all 0.2s;
-            font-weight: 500;
-            border: 1px solid var(--border);
-        }
-
-        .nav-link.active {
-            background: var(--accent);
             color: white;
-            border-color: var(--accent);
+            padding: 0.4rem 0.8rem;
+            /* Slightly reduced padding */
+            border-radius: 0.4rem;
+            transition: opacity 0.2s ease;
+            font-size: 0.9rem;
+            /* Reduced font size */
         }
 
-        .nav-link:hover:not(.active) {
-            background: rgba(58, 134, 255, 0.1);
-            border-color: var(--accent);
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            gap: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
+        .btn-blue:hover {
+            opacity: 0.9;
+            background-color: var(--primary-blue);
+            color: white;
         }
 
         .header-actions {
             display: flex;
-            gap: 0.75rem;
+            align-items: center;
+            gap: 0.8rem;
         }
 
-        /* Dropdown styles */
-        .dropdown {
-            position: relative;
-            display: inline-block;
+        .task-bar {
+            background-color: var(--background-white);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
         }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--background);
-            min-width: 160px;
-            border-radius: 0.375rem;
-            border: 1px solid var(--border);
-            z-index: 1000;
-            margin-top: 0.5rem;
-            box-shadow: var(--shadow);
+        .form-control {
+            border: 1px solid var(--border-color);
+            border-radius: 0.4rem;
+            padding: 0.4rem;
+            font-size: 0.9rem;
+            /* Reduced font size */
         }
 
-        .dropdown-content a {
-            color: var(--foreground);
-            padding: 0.75rem 1rem;
-            text-decoration: none;
-            display: block;
-            transition: all 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background: var(--muted);
-        }
-
-        .dropdown.active .dropdown-content {
-            display: block;
-            animation: slideDown 0.2s ease;
-        }
-
-        .task-section {
-            margin-top: 2rem;
+        .task-actions {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            gap: 0.4rem;
+            margin-top: 0.8rem;
+        }
+
+        .new-task-form {
+            background-color: var(--background-white);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 1.25rem 0;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dropdown-menu {
+            border: 1px solid var(--border-color);
+            border-radius: 0.4rem;
+            padding: 0.4rem;
+            min-width: 180px;
+            /* Slightly reduced width */
+            font-size: 0.9rem;
+            /* Reduced font size */
+        }
+
+        .dropdown-item {
+            border-radius: 0.25rem;
+            padding: 0.4rem 0.8rem;
+            color: #64748b;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        .dropdown-toggle.btn-blue:hover,
+        .dropdown-toggle.btn-blue:focus,
+        .dropdown-toggle.btn-blue:active {
+            background-color: var(--primary-blue) !important;
+            opacity: 0.9;
+            color: white !important;
+        }
+
+        .show>.btn-blue.dropdown-toggle {
+            background-color: var(--primary-blue) !important;
+            opacity: 0.9;
+            color: white !important;
         }
 
         .task-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .task-bar {
-            background: var(--background);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            overflow: hidden;
-            transition: all 0.2s ease;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow);
-        }
-
-        .task-bar:hover {
-            border-color: var(--accent);
-        }
-
-        .task-content {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            gap: 1rem;
             cursor: pointer;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0.8rem;
         }
 
-        .task-actions {
+        .task-inputs {
             display: flex;
-            gap: 0.5rem;
-            margin-left: auto;
-        }
-
-        .student-table-container {
-            display: none;
-            padding: 1rem;
-            background: var(--background);
-            border-top: 1px solid var(--border);
-        }
-
-        .student-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .student-table th,
-        .student-table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .student-table th {
-            font-weight: 600;
-            color: var(--foreground);
-            background: var(--muted);
-        }
-
-        .task-bar.active .student-table-container {
-            display: block;
-        }
-
-        .input {
-            background: var(--background);
-            border: 1px solid var(--border);
-            color: var(--foreground);
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.875rem;
-            width: 100%;
-            transition: all 0.2s ease;
-        }
-
-        .input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent);
-        }
-
-        .input:hover {
-            border-color: var(--accent);
+            gap: 0.8rem;
+            flex: 1;
         }
 
         .dropdown-icon {
-            margin-left: 0.5rem;
-            transition: transform 0.2s ease;
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+            /* Reduced from 1.5rem */
+            margin-left: 0.8rem;
         }
 
-        .task-bar.active .dropdown-icon {
-            transform: rotate(180deg);
-        }
-
-        .new-task-form {
-            background: var(--background);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            display: none;
-            box-shadow: var(--shadow);
-        }
-
-        .new-task-form.active {
-            display: block;
-            animation: slideDown 0.2s ease;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .dropdown .button::after {
-            content: '\25BC';
-            margin-left: 0.5rem;
-            font-size: 0.8em;
-            transition: transform 0.3s ease;
-            display: inline-block;
-        }
-
-        .dropdown.active .button::after {
-            transform: rotate(180deg);
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal.show {
-            display: block;
+        .task-buttons {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.8rem;
         }
 
         .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 90%;
-            max-width: 1200px;
+            border-radius: 0.6rem;
+        }
+
+        .pdf-viewer {
+            background-color: #f8fafc;
+            border-radius: 0.4rem;
+            height: 500px;
+            /* Reduced from 600px */
             display: flex;
-            border-radius: 0.5rem;
-            position: relative;
-        }
-
-        .modal-sidebar {
-            width: 300px;
-            padding-right: 20px;
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .modal-main {
-            flex-grow: 1;
-            padding-left: 20px;
-        }
-
-        .close {
-            position: absolute;
-            right: 20px;
-            top: 10px;
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-        }
-
-        .pdf-placeholder {
-            width: 100%;
-            height: 600px;
-            border: 1px solid var(--border);
-            display: flex;
-            justify-content: center;
             align-items: center;
-            font-size: 1.5rem;
-            color: var(--muted-foreground);
-            background: var(--background);
-            border-radius: 0.5rem;
+            justify-content: center;
+        }
+
+        /* Additional styles for smaller text */
+        h5 {
+            font-size: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+        }
+
+        .table {
+            font-size: 0.9rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.5rem;
         }
     </style>
 </head>
 
 <body>
     <div class="app-container">
-        <div class="layout">
-            <aside class="sidebar">
-                <h2 style="margin-bottom: 2rem; color: var(--accent); font-weight: 700;">Teacher Panel</h2>
+        <nav class="sidebar">
+            <h2 class="sidebar-title">Teacher Panel</h2>
+            <div class="nav flex-column">
                 <a href="teacherdashboard.html" class="nav-link">Dashboard</a>
                 <a href="teacherpanel.html" class="nav-link active">Panel</a>
-            </aside>
+            </div>
+        </nav>
 
-            <div class="main-content">
-                <header class="header">
-                    <div class="header-actions">
-                        <div class="dropdown">
-                            <button id="semesterBtn" class="button button-primary"
-                                onclick="toggleDropdown(this)">Semester</button>
-                            <div class="dropdown-content">
-                                <a href="#" onclick="selectSemester('FE', 1, this)">FE Semester 1</a>
-                                <a href="#" onclick="selectSemester('FE', 2, this)">FE Semester 2</a>
-                                <a href="#" onclick="selectSemester('SE', 3, this)">SE Semester 3</a>
-                                <a href="#" onclick="selectSemester('SE', 4, this)">SE Semester 4</a>
-                                <a href="#" onclick="selectSemester('TE', 5, this)">TE Semester 5</a>
-                                <a href="#" onclick="selectSemester('TE', 6, this)">TE Semester 6</a>
-                                <a href="#" onclick="selectSemester('BE', 7, this)">BE Semester 7</a>
-                                <a href="#" onclick="selectSemester('BE', 8, this)">BE Semester 8</a>
+        <main class="main-content">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="header-actions">
+                    <div class="dropdown">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="semesterBtn"
+                            data-bs-toggle="dropdown">
+                            Semester
+                        </button>
+                        <ul class="dropdown-menu" id="semesterDropdown"></ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="subjectBtn"
+                            data-bs-toggle="dropdown">
+                            Subject
+                        </button>
+                        <ul class="dropdown-menu" id="subjectDropdown"></ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="classBtn"
+                            data-bs-toggle="dropdown">
+                            Class
+                        </button>
+                        <ul class="dropdown-menu" id="classDropdown"></ul>
+                    </div>
+                </div>
+                <button class="btn btn-blue" onclick="logout()">Logout</button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-blue" onclick="toggleNewTaskForm()">Add Task</button>
+                <button class="btn btn-blue">Integrate Excel</button>
+            </div>
+
+            <div id="newTaskForm" class="new-task-form" style="display: none;">
+                <div class="mb-3">
+                    <label class="form-label">Task Name</label>
+                    <input type="text" id="newTaskName" class="form-control" placeholder="Enter task name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Due Date</label>
+                    <input type="date" id="newTaskDate" class="form-control">
+                </div>
+                <button class="btn btn-blue" onclick="saveNewTask()">Save Task</button>
+            </div>
+
+            <div id="taskList">
+                <!-- Tasks will be added here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- PDF Modal -->
+    <div class="modal fade" id="pdfModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">View PDF</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="mb-3">Add Marks</h5>
+                            <input type="number" class="form-control mb-3" id="marksInput" placeholder="Enter marks">
+                            <h5 class="mb-3">Add Comments</h5>
+                            <textarea class="form-control mb-3" id="commentsInput" rows="4"
+                                placeholder="Enter comments"></textarea>
+                            <button class="btn btn-blue" onclick="saveMarksAndComments()">Save</button>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pdf-viewer">
+                                PDF Viewer Placeholder
                             </div>
                         </div>
-                        <div class="dropdown">
-                            <button id="subjectBtn" class="button button-primary"
-                                onclick="toggleDropdown(this)">Subject</button>
-                            <div id="subjectDropdown" class="dropdown-content">
-                                <!-- Subjects will be populated dynamically -->
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button id="classBtn" class="button button-primary"
-                                onclick="toggleDropdown(this)">Class</button>
-                            <div id="classDropdown" class="dropdown-content">
-                                <!-- Classes will be populated dynamically -->
-                            </div>
-                        </div>
-                    </div>
-                    <button class="button button-primary" onclick="logout()">Logout</button>
-                </header>
-
-                <div class="task-section">
-                    <div class="task-header">
-                        <button class="button" onclick="toggleNewTaskForm()">Add Task</button>
-                        <button class="button button-primary">Integrate Excel</button>
-                    </div>
-
-                    <div id="newTaskForm" class="new-task-form">
-                        <div class="form-group">
-                            <label for="newTaskName">Task Name</label>
-                            <input type="text" id="newTaskName" class="input" placeholder="Enter task name">
-                        </div>
-                        <div class="form-group">
-                            <label for="newTaskDate">Due Date</label>
-                            <input type="date" id="newTaskDate" class="input">
-                        </div>
-                        <button class="button" onclick="saveNewTask()">Save Task</button>
-                    </div>
-
-                    <div id="taskList">
-                        <!-- Tasks will be added here -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div id="pdfModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="modal-sidebar">
-                <h3>Add Marks</h3>
-                <input type="number" class="input" id="marksInput" placeholder="Enter marks">
-                <h3>Add Comments</h3>
-                <textarea class="input" id="commentsInput" rows="4" placeholder="Enter comments"></textarea>
-                <button class="button button-primary" onclick="saveMarksAndComments()">Save</button>
-            </div>
-            <div class="modal-main">
-                <div class="pdf-placeholder">PDF Viewer Placeholder</div>
-            </div>
-        </div>
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const taskTemplate = (taskName, taskDate) => `
-    <div class="task-bar">
-        <div class="task-content" onclick="toggleTaskDetails(this)">
-            <input type="text" class="input" value="${taskName}" style="flex: 2" 
-                   onclick="event.stopPropagation()" onkeydown="event.stopPropagation()" readonly>
-            <input type="date" class="input" value="${taskDate}" style="flex: 1" 
-                   onclick="event.stopPropagation()" onkeydown="event.stopPropagation()" readonly>
-            <div class="task-actions">
-                <button class="button button-outline" onclick="editTask(event, this)">Edit</button>
-                <button class="button button-outline" onclick="deleteTask(event, this)">Delete</button>
-                <button class="button button-outline" onclick="generateExcel(event)">Generate Excel</button>
+            <div class="task-bar">
+                <div class="task-header" onclick="toggleTaskDetails(this)">
+                    <div class="task-inputs">
+                        <input type="text" class="form-control" value="${taskName}" readonly>
+                        <input type="date" class="form-control" value="${taskDate}" readonly>
+                    </div>
+                    <span class="dropdown-icon">▼</span>
+                </div>
+                <div class="task-buttons">
+                    <button class="btn btn-blue" onclick="editTask(this)">Edit</button>
+                    <button class="btn btn-blue" onclick="deleteTask(this)">Delete</button>
+                    <button class="btn btn-blue" onclick="generateExcel(event)">Generate Excel</button>
+                </div>
+                <div class="student-table-container mt-3" style="display: none;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>PID</th>
+                                <th>Name</th>
+                                <th>View PDF</th>
+                                <th>Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" class="form-control" placeholder="Roll No"></td>
+                                <td><input type="text" class="form-control" placeholder="PID"></td>
+                                <td><input type="text" class="form-control" placeholder="Name"></td>
+                                <td><button class="btn btn-blue" onclick="openPdfModal(event)">View PDF</button></td>
+                                <td><input type="text" class="form-control" placeholder="Marks"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <span class="dropdown-icon">▼</span>
-        </div>
-        <div class="student-table-container">
-            <table class="student-table">
-                <thead>
-                    <tr>
-                        <th>Roll No</th>
-                        <th>PID</th>
-                        <th>Name</th>
-                        <th>View PDF</th>
-                        <th>Marks</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="text" class="input" placeholder="Roll No"></td>
-                        <td><input type="text" class="input" placeholder="PID"></td>
-                        <td><input type="text" class="input" placeholder="Name"></td>
-                        <td><button class="button button-primary" onclick="openPdfModal(event)">View PDF</button></td>
-                        <td><input type="text" class="input" placeholder="Marks"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-`;
+        `;
 
         function toggleNewTaskForm() {
             const form = document.getElementById('newTaskForm');
-            form.classList.toggle('active');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
 
         function saveNewTask() {
@@ -581,39 +385,31 @@
 
         function toggleTaskDetails(element) {
             const taskBar = element.closest('.task-bar');
-
-            // Don't close if clicking inside the table
-            if (event.target.closest('.student-table-container')) {
-                return;
-            }
-
-            // Toggle active state
-            taskBar.classList.toggle('active');
+            const detailsContainer = taskBar.querySelector('.student-table-container');
+            const dropdownIcon = taskBar.querySelector('.dropdown-icon');
+            detailsContainer.style.display = detailsContainer.style.display === 'none' ? 'block' : 'none';
+            dropdownIcon.textContent = detailsContainer.style.display === 'none' ? '▼' : '▲';
         }
 
-        function editTask(event, button) {
-            event.stopPropagation();
+        function editTask(button) {
             const taskBar = button.closest('.task-bar');
-            const taskNameInput = taskBar.querySelector('.input[type="text"]');
-            const taskDateInput = taskBar.querySelector('.input[type="date"]');
+            const nameInput = taskBar.querySelector('input[type="text"]');
+            const dateInput = taskBar.querySelector('input[type="date"]');
 
-            if (taskNameInput.readOnly) {
-                taskNameInput.readOnly = false;
-                taskDateInput.readOnly = false;
+            if (nameInput.readOnly) {
+                nameInput.readOnly = false;
+                dateInput.readOnly = false;
                 button.textContent = 'Save';
-                taskNameInput.focus();
             } else {
-                taskNameInput.readOnly = true;
-                taskDateInput.readOnly = true;
+                nameInput.readOnly = true;
+                dateInput.readOnly = true;
                 button.textContent = 'Edit';
             }
         }
 
-        function deleteTask(event, button) {
-            event.stopPropagation();
+        function deleteTask(button) {
             if (confirm('Are you sure you want to delete this task?')) {
-                const taskBar = button.closest('.task-bar');
-                taskBar.remove();
+                button.closest('.task-bar').remove();
             }
         }
 
@@ -622,62 +418,15 @@
             alert('Generating Excel for this task...');
         }
 
-        function toggleDropdown(button) {
-            // Close all dropdowns first
-            document.querySelectorAll('.dropdown').forEach(dropdown => {
-                if (dropdown !== button.parentNode) {
-                    dropdown.classList.remove('active');
-                }
-            });
-
-            // Toggle the clicked dropdown
-            button.parentNode.classList.toggle('active');
-        }
-
         function logout() {
             alert('Logout clicked');
         }
 
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function (event) {
-            if (!event.target.closest('.dropdown')) {
-                document.querySelectorAll('.dropdown').forEach(dropdown => {
-                    dropdown.classList.remove('active');
-                });
-            }
-        });
-
-        // Prevent table interactions from closing dropdown
-        document.addEventListener('click', function (event) {
-            const tableContainer = event.target.closest('.student-table-container');
-            if (tableContainer) {
-                event.stopPropagation();
-            }
-        }, true);
-
-        // Modal functionality
-        const modal = document.getElementById('pdfModal');
-        const closeBtn = document.querySelector('.close');
-
         function openPdfModal(event) {
             event.preventDefault();
-            event.stopPropagation();
-            modal.classList.add('show');
+            const pdfModal = new bootstrap.Modal(document.getElementById('pdfModal'));
+            pdfModal.show();
         }
-
-        function closeModal() {
-            modal.classList.remove('show');
-        }
-
-        // Close modal when clicking the close button
-        closeBtn.addEventListener('click', closeModal);
-
-        // Close modal when clicking outside
-        window.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
 
         function saveMarksAndComments() {
             const marks = document.getElementById('marksInput').value;
@@ -685,10 +434,10 @@
             console.log('Marks saved:', marks);
             console.log('Comments saved:', comments);
             alert('Marks and comments saved!');
-            closeModal();
+            bootstrap.Modal.getInstance(document.getElementById('pdfModal')).hide();
         }
 
-        // Define subjects for each semester
+        // Update the semesterSubjects and yearClasses data
         const semesterSubjects = {
             1: ['Mathematics-1', 'Physics-1', 'Chemistry', 'Basic Electrical Engineering', 'Engineering Graphics'],
             2: ['Mathematics-2', 'Physics-2', 'Programming in C', 'Engineering Mechanics', 'Basic Electronics'],
@@ -700,7 +449,6 @@
             8: ['Deep Learning', 'Natural Language Processing', 'Information Security', 'Project Management', 'Ethics in IT']
         };
 
-        // Define classes for each year
         const yearClasses = {
             'FE': ['FE A', 'FE B'],
             'SE': ['SE CMPN A', 'SE CMPN B'],
@@ -713,96 +461,112 @@
         let selectedSubject = null;
         let selectedClass = null;
 
-        function selectSemester(year, semester, element) {
-            event.preventDefault();
-            selectedYear = year;
-            selectedSemester = semester;
-
-            // Update semester button text
-            const semesterBtn = document.getElementById('semesterBtn');
-            semesterBtn.textContent = `${year} Semester ${semester}`;
-
-            // Update subject dropdown
-            updateSubjectDropdown(semester);
-
-            // Update class dropdown
-            updateClassDropdown(year);
-
-            // Close the dropdown
-            element.closest('.dropdown').classList.remove('active');
+        function populateSemesterDropdown() {
+            const semesterDropdown = document.getElementById('semesterDropdown');
+            semesterDropdown.innerHTML = '';
+            ['FE', 'SE', 'TE', 'BE'].forEach((year, yearIndex) => {
+                for (let i = 1; i <= 2; i++) {
+                    const semester = yearIndex * 2 + i;
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.classList.add('dropdown-item');
+                    a.href = '#';
+                    a.textContent = `${year} Semester ${semester}`;
+                    a.onclick = () => selectSemester(year, semester);
+                    li.appendChild(a);
+                    semesterDropdown.appendChild(li);
+                }
+            });
         }
 
+        // Fix the updateSubjectDropdown function
         function updateSubjectDropdown(semester) {
             const subjectDropdown = document.getElementById('subjectDropdown');
-            subjectDropdown.innerHTML = ''; // Clear existing subjects
+            subjectDropdown.innerHTML = '';
 
-            // Add new subjects for selected semester
-            semesterSubjects[semester].forEach(subject => {
-                const link = document.createElement('a');
-                link.href = '#';
-                link.textContent = subject;
-                link.onclick = (e) => selectSubject(e, subject);
-                subjectDropdown.appendChild(link);
+            // Get subjects for the selected semester
+            const subjects = semesterSubjects[semester] || [];
+
+            subjects.forEach(subject => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.classList.add('dropdown-item');
+                a.href = '#';
+                a.textContent = subject;
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    selectSubject(subject);
+                };
+                li.appendChild(a);
+                subjectDropdown.appendChild(li);
             });
 
-            // Reset subject button
             const subjectBtn = document.getElementById('subjectBtn');
             subjectBtn.textContent = 'Subject';
             selectedSubject = null;
         }
 
+        // Fix the updateClassDropdown function
         function updateClassDropdown(year) {
             const classDropdown = document.getElementById('classDropdown');
-            classDropdown.innerHTML = ''; // Clear existing classes
+            classDropdown.innerHTML = '';
 
-            // Add new classes for selected year
-            yearClasses[year].forEach(className => {
-                const link = document.createElement('a');
-                link.href = '#';
-                link.textContent = className;
-                link.onclick = (e) => selectClass(e, className);
-                classDropdown.appendChild(link);
+            // Get classes for the selected year
+            const classes = yearClasses[year] || [];
+
+            classes.forEach(className => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.classList.add('dropdown-item');
+                a.href = '#';
+                a.textContent = className;
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    selectClass(className);
+                };
+                li.appendChild(a);
+                classDropdown.appendChild(li);
             });
 
-            // Reset class button
             const classBtn = document.getElementById('classBtn');
             classBtn.textContent = 'Class';
             selectedClass = null;
         }
 
-        function selectSubject(event, subject) {
-            event.preventDefault();
-            selectedSubject = subject;
+        // Update the selectSemester function
+        function selectSemester(year, semester) {
+            selectedYear = year;
+            selectedSemester = semester;
 
-            // Update subject button text
+            const semesterBtn = document.getElementById('semesterBtn');
+            semesterBtn.textContent = `${year} Semester ${semester}`;
+
+            // Update dropdowns with the correct values
+            updateSubjectDropdown(semester);
+            updateClassDropdown(year);
+        }
+
+        function selectSubject(subject) {
+            selectedSubject = subject;
             const subjectBtn = document.getElementById('subjectBtn');
             subjectBtn.textContent = subject;
-
-            // Close the dropdown
-            event.target.closest('.dropdown').classList.remove('active');
         }
 
-        function selectClass(event, className) {
-            event.preventDefault();
+        function selectClass(className) {
             selectedClass = className;
-
-            // Update class button text
             const classBtn = document.getElementById('classBtn');
             classBtn.textContent = className;
-
-            // Close the dropdown
-            event.target.closest('.dropdown').classList.remove('active');
         }
 
-        // // Initialize with FE Semester 1 selected
-        // document.addEventListener('DOMContentLoaded', () => {
-        //     const taskList = document.getElementById('taskList');
-        //     const today = new Date().toISOString().split('T')[0];
-        //     taskList.insertAdjacentHTML('beforeend', taskTemplate('Sample Task', today));
+        // Initialize with FE Semester 1 selected
+        document.addEventListener('DOMContentLoaded', () => {
+            const taskList = document.getElementById('taskList');
+            const today = new Date().toISOString().split('T')[0];
+            // taskList.insertAdjacentHTML('beforeend', taskTemplate('Sample Task', today));
 
-        //     // Select FE Semester 1 by default
-        //     selectSemester('FE', 1, document.querySelector('.dropdown-content a:first-child'));
-        // });
+            populateSemesterDropdown();
+            // selectSemester('FE', 1);
+        });
     </script>
 </body>
 
